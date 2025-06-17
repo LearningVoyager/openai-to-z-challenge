@@ -1,21 +1,21 @@
-name: openai_to_z          # no spaces → avoids shell quoting issues
+name: openai_to_z
 channels:
-  - apple                  # for tensorflow-deps
-  - conda-forge            # PyTorch & everything else
+  - pytorch        # official PyTorch builds
+  - conda-forge
   - defaults
 
 dependencies:
-  # -------- core --------
+  # ---------- core ----------
   - python=3.12
-  - pip                    # keep pip managed by conda
+  - pip
 
-  # -------- notebooks & dev --------
+  # ---------- notebooks & dev ----------
   - jupyterlab=4
   - invoke
   - path.py
   - mlflow
 
-  # -------- data / ML stack --------
+  # ---------- data / viz ----------
   - numpy
   - pandas
   - pandas-profiling
@@ -24,24 +24,20 @@ dependencies:
   - statsmodels
   - scikit-learn
   - lightgbm
-  - xgboost
   - rasterio
+  - xgboost
   - folium
 
-  # -------- deep learning --------
-  - pytorch>=2.2,<2.3       # latest 2.2-x build from conda-forge
-  - torchvision
-  - torchaudio
-  - cpuonly                 # comment out on a CUDA box
+  # ---------- deep-learning (arm64) ----------
+  - pytorch=2.4.*          # new arm64 build
+  - torchvision=0.19.*
+  - torchaudio=2.4.*
 
-  - tensorflow-deps=2.19    # pulls protobuf, h5py, etc.   [oai_citation:3‡anaconda.org](https://anaconda.org/apple/tensorflow-deps?utm_source=chatgpt.com)
-
-  # -------- pip-only extras --------
+  # ---------- pip-only extras ----------
   - pip:
-      # Apple-optimised TF runtime
-      - tensorflow-macos==2.19.*      # pip wheel for arm64   [oai_citation:4‡medium.com](https://medium.com/%40sorenlind/tensorflow-with-gpu-support-on-apple-silicon-mac-with-homebrew-and-without-conda-miniforge-915b2f15425b?utm_source=chatgpt.com)
-      # optional but common DS libs
-      - keras                         # Keras-3 API
+      - tensorflow-macos==2.19.*   # Apple-signed wheel
+      - tensorflow-metal==1.1.*    # Metal acceleration
+      - keras
       - kaggle
       - plotly>=5
       - black
