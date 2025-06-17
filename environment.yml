@@ -1,30 +1,62 @@
-name: OpenAI-to-Z Kaggle Challenge
+name: openai_to_z                   # no spaces keeps shell quoting simple
 channels:
-  - anaconda
+  - pytorch                         # official arm64 wheels for torch/vision/audio
   - conda-forge
   - defaults
+
 dependencies:
+  # ---------- core ----------
+  - python=3.12                     # newest stable Python with wide-package support
+  - pip                             # keep pip itself managed by Conda
+
+  # ---------- notebooks / dev ----------
+  - jupyterlab=4
   - invoke
-  - jupyter
-  - jupyterlab
-  - matplotlib
+  - path.py
+  - mlflow
+
+  # ---------- classic data / ML stack ----------
   - numpy
   - pandas
   - pandas-profiling
-  - path.py
-  - python=3.6
-  - scikit-learn
+  - matplotlib
   - seaborn
   - statsmodels
+  - scikit-learn
+  - lightgbm
+  - xgboost
+
+  # ---------- geospatial & raster ----------
+  - rasterio
+  - folium
+  - geopandas                       # pulls shapely, pyproj, fiona, rtree
+  - sentinelhub                     # Sentinel-1/2/DEM client
+  - s2cloudless                     # Sentinel-2 cloud detector
+  - torchgeo                        # PyTorch helpers for multispectral imagery
+
+  # ---------- deep-learning (GPU via Apple-silicon MPS) ----------
+  - pytorch=2.4.*                   # any 2.4.x build
+  - torchvision=0.19.*
+  - torchaudio=2.4.*                # requires torch >= 2.4
+  # (no cpuonly or tensorflow-deps—they don't exist for mac arm64)
+
+  # ---------- pip-only extras ----------
   - pip:
-      - black
-      - h2o
+      # Apple-optimised TensorFlow stack
+      - tensorflow-macos==2.16.*    # latest Apple wheel for Py 3.12
+      - tensorflow-metal==1.2.*     # Metal acceleration layer
+      # PyTorch ecosystem helpers
+      - accelerate                  # device dispatch incl. mps
+      - torchmetrics                # metrics with mps support
+      # OpenAI & LiDAR tooling
+      - openai>=1.88
+      - laspy                       # .LAS / .LAZ point-cloud reader
+      # utilities
       - kaggle
-      - keras
-      - lightgbm
-      - missingno
+      - keras==3.*                  # Keras 3 API (pairs with TF 2.16)
+      - plotly>=5
+      - black
       - nbdime
-      - plotly
       - pylint
+      - missingno
       - pyspark
-      - tensorflow
