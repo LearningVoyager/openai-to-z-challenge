@@ -1,20 +1,21 @@
-name: openai_to_z               # no spaces = fewer headaches
+name: openai_to_z          # keep it simple: no spaces
 channels:
+  - pytorch                # first so the correct torch build wins
   - conda-forge
   - defaults
 
 dependencies:
-  # ---------- core interpreter ----------
-  - python=3.13                   # latest stable
+  # ---------- core ----------
+  - python=3.12
+  - pip                     # makes sure pip itself is managed by conda
 
-  # ---------- dev & notebook stack ----------
+  # ---------- notebooks & dev ----------
   - jupyterlab=4
   - invoke
   - path.py
-  - pip                           # pulls pip itself from conda
-  - mlflow                        # conda build avoids protobuf clashes
+  - mlflow                  # conda build avoids protobuf clashes
 
-  # ---------- scientific stack ----------
+  # ---------- data / viz stack ----------
   - numpy
   - pandas
   - pandas-profiling
@@ -23,21 +24,26 @@ dependencies:
   - statsmodels
   - scikit-learn
   - lightgbm
-
-  # ---------- extras you’ll likely add soon ----------
-  - rasterio                      # geospatial rasters
+  - rasterio
   - xgboost
   - folium
 
-  # ---------- pip-only packages ----------
+  # ---------- deep-learning frameworks ----------
+  - pytorch=2.2.*           # CPU build from pytorch channel
+  - torchvision=0.17.*
+  - torchaudio=2.2.*
+  - cpuonly                 # keeps CUDA stuff out; drop this on a GPU box
+
+  - tensorflow=2.19.*       # CPU -only build from conda-forge
+
+  # ---------- pip-only extras ----------
   - pip:
       - black
       - h2o
       - kaggle
-      - keras                     # uses tf-keras 3.x under the hood
+      - keras               # optional – TF already bundles Keras 3
       - missingno
       - nbdime
       - plotly>=5
       - pylint
       - pyspark
-      - tensorflow==2.16.*        # pin to latest long-term patch
