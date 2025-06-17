@@ -1,21 +1,21 @@
-name: openai_to_z             # no spaces
+name: openai_to_z
 channels:
-  - pytorch                   # official PyTorch arm64 builds
+  - pytorch                 # arm-64 builds for torch/vision/audio
   - conda-forge
   - defaults
 
 dependencies:
-  # ---------- core ----------
+  # -------- core --------
   - python=3.12
   - pip
 
-  # ---------- notebooks & dev ----------
+  # -------- notebooks / dev --------
   - jupyterlab=4
   - invoke
   - path.py
   - mlflow
 
-  # ---------- data / viz ----------
+  # -------- data / classic ML --------
   - numpy
   - pandas
   - pandas-profiling
@@ -28,22 +28,21 @@ dependencies:
   - rasterio
   - folium
 
-  # ---------- deep learning (GPU via MPS) ----------
-  - pytorch=2.4.*             # contains MPS kernels
+  # -------- PyTorch GPU (MPS) --------
+  - pytorch=2.4.*           # newest arm-64 torch with MPS backend   [oai_citation:2‡pytorch.org](https://pytorch.org/docs/stable/notes/mps.html?utm_source=chatgpt.com)
   - torchvision=0.19.*
   - torchaudio=2.4.*
 
-  # ---------- pip-only extras ----------
+  # -------- pip-only extras --------
   - pip:
-      # Apple-silicon TensorFlow
-      - tensorflow-macos==2.16.*
-      - tensorflow-metal==1.0.*        # Metal acceleration layer
-      # PyTorch ecosystem helpers
-      - accelerate                     # easy device dispatch incl. mps
-      - torchmetrics                   # metrics w/ MPS support
-      # utilities
+      # TensorFlow GPU stack for Apple silicon
+      - tensorflow-macos==2.16.*                   # latest TF that still ships Apple wheel   [oai_citation:3‡stackoverflow.com](https://stackoverflow.com/questions/78825554/how-to-install-tensorflow-2-16-on-macbook-pro-m2?utm_source=chatgpt.com)
+      - tensorflow-metal==1.2.*                    # first wheel that supports Python 3.12   [oai_citation:4‡pypi.org](https://pypi.org/project/tensorflow-metal/) [oai_citation:5‡pypi.org](https://pypi.org/project/tensorflow-metal/)
+      # helpers
+      - accelerate                                 # easy device dispatch on MPS
+      - torchmetrics                               # metrics lib that supports MPS
       - kaggle
-      - keras
+      - keras==3.*                                 # Keras 3, works with TF 2.16  [oai_citation:6‡tensorflow.org](https://www.tensorflow.org/guide/versions?utm_source=chatgpt.com)
       - plotly>=5
       - black
       - nbdime
