@@ -1,30 +1,43 @@
-name: OpenAI-to-Z Kaggle Challenge
+name: openai_to_z               # no spaces = fewer headaches
 channels:
-  - anaconda
   - conda-forge
   - defaults
+
 dependencies:
+  # ---------- core interpreter ----------
+  - python=3.13                   # latest stable
+
+  # ---------- dev & notebook stack ----------
+  - jupyterlab=4
   - invoke
-  - jupyter
-  - jupyterlab
-  - matplotlib
+  - path.py
+  - pip                           # pulls pip itself from conda
+  - mlflow                        # conda build avoids protobuf clashes
+
+  # ---------- scientific stack ----------
   - numpy
   - pandas
   - pandas-profiling
-  - path.py
-  - python=3.6
-  - scikit-learn
+  - matplotlib
   - seaborn
   - statsmodels
+  - scikit-learn
+  - lightgbm
+
+  # ---------- extras you’ll likely add soon ----------
+  - rasterio                      # geospatial rasters
+  - xgboost
+  - folium
+
+  # ---------- pip-only packages ----------
   - pip:
       - black
       - h2o
       - kaggle
-      - keras
-      - lightgbm
+      - keras                     # uses tf-keras 3.x under the hood
       - missingno
       - nbdime
-      - plotly
+      - plotly>=5
       - pylint
       - pyspark
-      - tensorflow
+      - tensorflow==2.16.*        # pin to latest long-term patch
