@@ -1,6 +1,6 @@
-name: openai_to_z
+name: openai_to_z             # no spaces
 channels:
-  - pytorch        # official PyTorch builds
+  - pytorch                   # official PyTorch arm64 builds
   - conda-forge
   - defaults
 
@@ -24,21 +24,26 @@ dependencies:
   - statsmodels
   - scikit-learn
   - lightgbm
-  - rasterio
   - xgboost
+  - rasterio
   - folium
 
-  # ---------- deep-learning (arm64) ----------
-  - pytorch=2.4.*          # new arm64 build
+  # ---------- deep learning (GPU via MPS) ----------
+  - pytorch=2.4.*             # contains MPS kernels
   - torchvision=0.19.*
   - torchaudio=2.4.*
 
   # ---------- pip-only extras ----------
   - pip:
-      - tensorflow-macos==2.19.*   # Apple-signed wheel
-      - tensorflow-metal==1.1.*    # Metal acceleration
-      - keras
+      # Apple-silicon TensorFlow
+      - tensorflow-macos==2.16.*
+      - tensorflow-metal==1.0.*        # Metal acceleration layer
+      # PyTorch ecosystem helpers
+      - accelerate                     # easy device dispatch incl. mps
+      - torchmetrics                   # metrics w/ MPS support
+      # utilities
       - kaggle
+      - keras
       - plotly>=5
       - black
       - nbdime
