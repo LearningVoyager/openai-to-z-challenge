@@ -1,21 +1,21 @@
-name: openai_to_z          # keep it simple: no spaces
+name: openai_to_z          # no spaces → avoids shell quoting issues
 channels:
-  - pytorch                # first so the correct torch build wins
-  - conda-forge
+  - apple                  # for tensorflow-deps
+  - conda-forge            # PyTorch & everything else
   - defaults
 
 dependencies:
-  # ---------- core ----------
+  # -------- core --------
   - python=3.12
-  - pip                     # makes sure pip itself is managed by conda
+  - pip                    # keep pip managed by conda
 
-  # ---------- notebooks & dev ----------
+  # -------- notebooks & dev --------
   - jupyterlab=4
   - invoke
   - path.py
-  - mlflow                  # conda build avoids protobuf clashes
+  - mlflow
 
-  # ---------- data / viz stack ----------
+  # -------- data / ML stack --------
   - numpy
   - pandas
   - pandas-profiling
@@ -24,26 +24,28 @@ dependencies:
   - statsmodels
   - scikit-learn
   - lightgbm
-  - rasterio
   - xgboost
+  - rasterio
   - folium
 
-  # ---------- deep-learning frameworks ----------
-  - pytorch=2.2.*           # CPU build from pytorch channel
-  - torchvision=0.17.*
-  - torchaudio=2.2.*
-  - cpuonly                 # keeps CUDA stuff out; drop this on a GPU box
+  # -------- deep learning --------
+  - pytorch>=2.2,<2.3       # latest 2.2-x build from conda-forge
+  - torchvision
+  - torchaudio
+  - cpuonly                 # comment out on a CUDA box
 
-  - tensorflow=2.19.*       # CPU -only build from conda-forge
+  - tensorflow-deps=2.19    # pulls protobuf, h5py, etc.   [oai_citation:3‡anaconda.org](https://anaconda.org/apple/tensorflow-deps?utm_source=chatgpt.com)
 
-  # ---------- pip-only extras ----------
+  # -------- pip-only extras --------
   - pip:
-      - black
-      - h2o
+      # Apple-optimised TF runtime
+      - tensorflow-macos==2.19.*      # pip wheel for arm64   [oai_citation:4‡medium.com](https://medium.com/%40sorenlind/tensorflow-with-gpu-support-on-apple-silicon-mac-with-homebrew-and-without-conda-miniforge-915b2f15425b?utm_source=chatgpt.com)
+      # optional but common DS libs
+      - keras                         # Keras-3 API
       - kaggle
-      - keras               # optional – TF already bundles Keras 3
-      - missingno
-      - nbdime
       - plotly>=5
+      - black
+      - nbdime
       - pylint
+      - missingno
       - pyspark
